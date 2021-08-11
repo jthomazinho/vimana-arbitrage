@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+local_files=( ".env.development.local" ".env.test.local" )
+empty_var_template=".*=$"
+
+function init_local {
+  TMP_FILE=.env.local
+  grep -B1 "${empty_var_template}" .env > ${TMP_FILE}
+
+  for f in "${local_files[@]}"; do
+    if [ -f "${f}" ]; then
+      echo "  * '${f}' file exists, please update manually."
+    else
+      cp "${TMP_FILE}" "${f}"
+      echo "  * Created file '${f}', please fill it with your local configuration."
+    fi
+  done
+
+  rm "${TMP_FILE}"
+}
+
+function check_local {
+  local missing
+  for f in "${local_files[@]}"; do
+    count="$(grep -c "${empty_var_template}" "${f}" || true)"
+    if [ "${count}" != "0" ]; then
+      missing=1
+      echo "    * ${f}: There are variables missing values! Please fill them."
+    fi
+  done
+
+  if [[ missing -eq 1 ]]; then
+    manual_check
+  fi
+}
+
+function manual_check {
+  read -rp "Configuration ready (Y/n)? " ready
+  if [[ "${ready}" == "n" ]]; then
+    echo "Please complete the configuration then run the script again."
+    exit 1
+  fi
+}
+
+echo "Node.js version: $(node -v)"
+echo
+echo "Installing dependencies..."
+npm install
+echo
+if [[ -z "${CI}" ]]; then
+  echo "Initializing .local configuration..."
+  init_local
+  check_local
+fi
+echo
+echo "Running migrations..."
+npx sequelize-cli db:create
+npm run db:migrate
+npx sequelize-cli db:seed:all
+echo
+echo "Setup done!"

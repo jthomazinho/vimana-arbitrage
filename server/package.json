@@ -1,0 +1,94 @@
+{
+  "name": "amizade-bot-arbitrage",
+  "version": "1.0.0",
+  "description": "Bot for arbitrage trading",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jthomazinho/amizade"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "dev": "ts-node --files ./node_modules/moleculer/bin/moleculer-runner --repl --hot --config moleculer.config.ts services/*.service.ts services/**/*.service.ts services/*.service.js services/**/*.service.js",
+    "start": "moleculer-runner services",
+    "cli": "moleculer connect NATS",
+    "ci": "jest --watch",
+    "test": "jest --coverage -w 2",
+    "lint": "eslint --ext .js,.ts .",
+    "dc:up": "docker-compose up --build -d",
+    "dc:logs": "docker-compose logs -f",
+    "dc:down": "docker-compose down",
+    "db:setup": "npm run db:create; npm run db:migrate; npm run db:seed",
+    "db:setup:test": "env NODE_ENV=test npm run db:setup",
+    "db:create": "sequelize-cli db:create",
+    "db:migrate": "sequelize-cli db:migrate",
+    "db:seed": "npx sequelize-cli db:seed:all",
+    "db:create:test": "env NODE_ENV=test npm run db:create",
+    "db:migrate:test": "env NODE_ENV=test npm run db:migrate",
+    "db:seed:test": "env NODE_ENV=test npm run db:seed"
+  },
+  "keywords": [
+    "microservices",
+    "moleculer"
+  ],
+  "author": "",
+  "devDependencies": {
+    "@types/bintrees": "^1.0.3",
+    "@types/bluebird": "^3.5.33",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.31",
+    "@types/speakeasy": "^2.0.5",
+    "@types/umzug": "^2.3.0",
+    "@types/uuid": "^8.3.0",
+    "@types/ws": "^7.4.0",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.5",
+    "fishery": "^1.2.0",
+    "husky": "^5.1.1",
+    "jest": "^25.5.4",
+    "jest-cli": "^26.6.3",
+    "jest-extended": "^0.11.5",
+    "moleculer-repl": "^0.6.4",
+    "ts-jest": "^25.5.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^3.9.9",
+    "umzug": "^2.3.0"
+  },
+  "dependencies": {
+    "@types/datadog-metrics": "^0.6.0",
+    "@xstate/fsm": "^1.6.0",
+    "axios": "^0.21.1",
+    "bintrees": "^1.0.2",
+    "datadog-metrics": "^0.9.1",
+    "dotenv": "^8.2.0",
+    "husky-run": "0.0.0",
+    "lodash": "^4.17.20",
+    "moleculer": "^0.14.12",
+    "moleculer-cli": "^0.7.1",
+    "moleculer-db": "^0.8.11",
+    "moleculer-db-adapter-sequelize": "^0.2.10",
+    "moleculer-web": "^0.9.1",
+    "mysql2": "^2.2.5",
+    "node": "^15.7.0",
+    "npm": "^7.5.6",
+    "rollbar": "^2.21.0",
+    "sequelize": "^5.22.3",
+    "sequelize-cli": "^6.2.0",
+    "speakeasy": "^2.0.0",
+    "underscore": "^1.13.0-2",
+    "uuid": "^8.3.2",
+    "ws": "^7.4.3"
+  },
+  "engines": {
+    "node": ">= 15.x.x"
+  }
+}

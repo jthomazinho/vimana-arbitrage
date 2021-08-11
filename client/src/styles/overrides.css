@@ -1,0 +1,19 @@
+.MuiTableCell-sizeSmall {
+  height: 42px;
+}
+
+.MuiPaper-rounded {
+  border-radius: 0;
+}
+
+th.MuiTableCell-sizeSmall {
+  padding: 6px;
+}
+
+th.MuiTableCell-sizeSmall:last-child {
+  padding-right: 6px;
+}
+
+th.MuiTableCell-sizeSmall {
+  height: 26px;
+}
