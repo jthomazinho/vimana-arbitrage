@@ -295,6 +295,9 @@ export class Algo {
   }
 
   private recalculate(): void {
+
+    console.log(`\r\nrecalculate \r\n`);
+
     this.definePegPriceManual();
     /**
      * MUST call update price to update long price at accumulator

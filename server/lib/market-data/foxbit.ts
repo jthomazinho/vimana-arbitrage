@@ -224,6 +224,7 @@ function subscribeBook(instrument: md.Instrument, subscriber: md.Subscriber): vo
     if (response.n === 'SubscribeLevel2' || response.n === 'Level2UpdateEvent') {
       if (!response.o.errorcode) {
         const depth = handleDepth(response, instrument, foxbitBook);
+        //console.log(`message: ${JSON.stringify(depth)}`);
         lastDepth = {
           asks: depth.asks,
           bids: depth.bids,

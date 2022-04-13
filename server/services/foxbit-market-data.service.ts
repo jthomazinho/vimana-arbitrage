@@ -21,6 +21,7 @@ export default class extends Service {
     const instrument = { exchange: 'foxbit', symbol: 'btcbrl' };
     const client: md.Subscriber = {
       onDepth: (depth) => {
+        //console.log(`foxbit-market-data.service: ${JSON.stringify(depth)}\r\n`);
         this.broker.broadcast<md.Depth>(`md.depth.${instrument.exchange}.${instrument.symbol}`, depth);
       },
       onQuote: () => { /* this is empty cause this md does not implement onQuote event */ },

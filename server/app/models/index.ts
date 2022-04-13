@@ -1,6 +1,5 @@
 /* eslint-disable import/prefer-default-export */
 import { Sequelize } from 'sequelize';
-
 import { initInputSharedInstance } from './input-shared-instance';
 import { initAlgoInstance } from './algo-instance';
 import { initAlgoOTCInstance } from './algo-otc-instance';

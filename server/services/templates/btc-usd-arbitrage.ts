@@ -64,7 +64,7 @@ export class Template extends Service implements ServiceExecutor {
   constructor(broker: ServiceBroker, id: number, name: string) {
     super(broker);
     datadog.init();
-
+    console.log(`\r\nBTC-USD-ARBITRAGE\r\n`);
     this.parseServiceSchema({
       name,
       dependencies: ['btc-usd-arbitrage-controller', 'fees'],
@@ -256,10 +256,12 @@ export class Template extends Service implements ServiceExecutor {
 
   // #region MD handlers
   onShortDepth(ctx: Context<Depth>): void {
+    console.log('\r\n\r\n--------------------------\r\n\r\n\r\n\r\n')
     this.algo.onShortDepth(ctx.params);
   }
 
   onLongDepth(ctx: Context<Depth>): void {
+    console.log('\r\n\r\n++++++++++++++++++++++++++r\n\r\n\r\n\r\n')
     this.algo.onLongDepth(ctx.params);
   }
 

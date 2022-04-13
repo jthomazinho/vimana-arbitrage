@@ -1,5 +1,8 @@
+require('dotenv');
 /* eslint-disable max-classes-per-file */
 import { Context, Service, ServiceBroker } from 'moleculer';
+
+const { MongoClient} = require('mongodb');
 
 import { Depth, Quote } from '../lib/market-data';
 import { ServiceStatus } from '../lib/status';
@@ -9,6 +12,7 @@ import UpdateDepth from '../lib/status/update-depth';
 import UpdateQuote from '../lib/status/update-quote';
 import UpdateStatus from '../lib/status/update-status';
 
+const mongoClient = new MongoClient(process.env.DB_CONNECTION_URI as string);
 export default class extends Service {
   foxbit: Exchange<Depth>;
 
@@ -18,7 +22,6 @@ export default class extends Service {
 
   constructor(broker: ServiceBroker) {
     super(broker);
-
     this.parseServiceSchema({
       name: 'status',
       events: {
@@ -38,6 +41,18 @@ export default class extends Service {
     this.foxbit = new Exchange(new UpdateDepth(), new UpdateStatus(), new UpdateStatus());
     this.bitstamp = new Exchange(new UpdateDepth(), new UpdateStatus(), new AlwaysAvailable());
     this.plural = new Exchange(new UpdateQuote(), new UpdateStatus(), new AlwaysAvailable());
+
+    this.startUp();
+  }
+
+  async startUp(): Promise<boolean> {
+    await mongoClient.connect();
+    return true;
+  }
+
+  async createBookDocument(collection: string, book: Depth): Promise<boolean> {
+    const result = await mongoClient.db("arbitrage").collection(collection).insertOne(book);
+    return true;
   }
 
   handleGetStatus(): object {
@@ -48,11 +63,15 @@ export default class extends Service {
     };
   }
 
-  onBitstampDepth(ctx: Context<Depth>): void {
+  async onBitstampDepth(ctx: Context<Depth>): Promise<void> {
+    console.log(`onBitstampDepth: ${JSON.stringify(ctx.params)}`);
+    const result = await this.createBookDocument('exchange-book', ctx.params);
     this.bitstamp.updateMdPrice(ctx.params);
   }
 
-  onFoxbitDepth(ctx: Context<Depth>): void {
+  async onFoxbitDepth(ctx: Context<Depth>): Promise<void> {
+    console.log(`onFoxbitDepth: ${JSON.stringify(ctx.params)}`);
+    const result = await this.createBookDocument('exchange-book', ctx.params);
     this.foxbit.updateMdPrice(ctx.params);
   }
 
