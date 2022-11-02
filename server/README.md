@@ -11,7 +11,7 @@ Run the `bin/setup` script.
 ## Usage
 
 Start the project with `npm run dev` command.
-After starting, open the <http://localhost:3000/> URL in your browser.
+After starting, open the <http://localhost:3003/> URL in your browser.
 
 ## Useful links
 
